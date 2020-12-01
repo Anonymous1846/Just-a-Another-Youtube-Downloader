@@ -20,32 +20,59 @@ if os.path.isdir(FINAL_PATH):
 else:
     os.mkdir(FINAL_PATH)
     print(f"The requested Directory {FINAL_PATH} Created ! ")
+    """"**********************************The Below Code is For Downloading a Single Video********************"""
 
-link=input('Paste the Link of the Video')
-try:
-    #Fetching the Video Using the Youtube Object From the link provided by the user !
-    y=pytube.YouTube(link)
-    #printing the author information and The Video Title !
-    print(f"The Video you Searched For is f{y.title} Author: {y.author}")
-    #Counter needs to be assigned to the Video So that the User can choose the Video According to the Int Number !
-    counter=1
-    format_value=input('1)video\n2)audio')
-    for i in y.streams.filter(type='video' if format_value=='1' else 'audio'):
-        #used to show the Type and Quality which are seperated by Spaces
-        list=str(i).split(" ")
-        itag,type,quality= re.findall(r'"([^"]*)"',str(list[1])+str(list[2]) +str(list[3]))
-        #The Integer is mapped to an unique iTag so that user can choose easily
-        dic_for_video[counter]=itag
-        print(f"{counter}) Type:{type} Quality: {quality}")
-        #Increamenting the counter so that Shows A Sequence order !
-        counter=counter+1
-    id_number=input('Enter The Id Number of The Video To Download The Video !')
-    #out of the video streams the video selected by the user gets downloaded to the FINAL_PATH
-    file_name=input('Save as :')
-    y.streams.get_by_itag(dic_for_video.get(int(id_number))).download(FINAL_PATH,file_name)
-    print(f'File Saved to {FINAL_PATH} as {file_name}')
-#If Video/Audio Download Fails
-except Exception as e:
+
+def download_single_video():
+    link = input('Paste the Link of the Video')
+    try:
+        # Fetching the Video Using the Youtube Object From the link provided by the user !
+        y = pytube.YouTube(link)
+        # printing the author information and The Video Title !
+        print(f"The Video you Searched For is f{y.title} Author: {y.author}")
+        # Counter needs to be assigned to the Video So that the User can choose the Video According to the Int Number !
+        counter = 1
+        format_value = input('1)video\n2)audio')
+        for i in y.streams.filter(type='video' if format_value == '1' else 'audio'):
+           # used to show the Type and Quality which are seperated by Spaces
+            list = str(i).split(" ")
+            itag, type, quality,fps_bitrate,audio_video = re.findall(r'"([^"]*)"', str(list[1]) + str(list[2]) + str(list[3]) +str(list[4])+ str(list[6]))
+            # The Integer is mapped to an unique iTag so that user can choose easily
+            dic_for_video[counter] = itag
+            print(f"{counter}) Type:{type} \tQuality: {quality} \tFPS/BitRate: {fps_bitrate} \tHas Both Video/Audio: {audio_video}")
+
+             # Increamenting the counter so that Shows A Sequence order !
+            counter = counter + 1
+        id_number = input('Enter The Id Number of The Video To Download The Video !')
+        # out of the video streams the video selected by the user gets downloaded to the FINAL_PATH
+        file_name = input('Save as :')
+        y.streams.get_by_itag(dic_for_video.get(int(id_number))).download(FINAL_PATH, file_name)
+        print(f'File Saved to {FINAL_PATH} as {file_name}')
+    # If Video/Audio Download Fails
+    except Exception as e:
         print(f"Oops An Error Occured While Traversing the Link,Looks Like the Video URL is Corrupted !")
-finally:
-    print('Program Exiting......')
+    finally:
+        print('Done....')
+""""**********************************The Below Code is For Downloading a Playlist(Collection Of Videos)********************"""
+def download_playlist():
+    play_list_link=input('Paste Playlist URL')
+    try:
+        y=pytube.Playlist(play_list_link)
+        print(f'Title: {y.title},Number of Playlists: {len(y.video_urls)}')
+        video_list=y.videos
+        for video in video_list:
+            single_video=video.streams.filter(progressive=True)
+
+    except Exception as e:
+        print(f'{str(e)} Occured\nExiting program !')
+    finally:
+        print('Done..')
+#Ask The User Whether it is A Single Video or Playlist
+prompt_single_or_playlist=int(input('1)Single Video\n2)Playist'))
+if prompt_single_or_playlist == 1:
+    download_single_video()
+elif prompt_single_or_playlist==2:
+    download_playlist()
+else:
+    print('invalid Selection.....!')
+
