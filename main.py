@@ -3,6 +3,7 @@ import  pytube
 import os
 #Used to Extract the Text Between the Double Quotes !
 import re
+import concurrent.futures.thread
 print('                                           **********Youtube Video Downloader*************')
 print('                                                             V1.0')
 print('---------------------------------------------------------------------------------------------------------------------------')
@@ -73,15 +74,17 @@ def download_single_video():
 def download_playlist():
     play_list_link=input('Paste Playlist URL: ')
     play_list=pytube.Playlist(play_list_link)
-    print(f'Playlist Title: {play_list.title} and Number of Videos :{len(play_list.video_urls)}')
+    print(f'Playlist Title: {play_list.title} and Number of Videos :')
     quality=int(input('Enter Quality\n1)Max\n2)High\n3)Medium\n4)Low'))
-    for video in play_list.video_urls:
-        download_video(video,getITag(quality))
+    for video_url in play_list:
+        download_video(video_url,getITag(quality))
 #Ask The User Whether it is A Single Video or Playlist
 prompt_single_or_playlist=int(input('1)Single Video\n2)Playist'))
 if prompt_single_or_playlist == 1:
     download_single_video()
 elif prompt_single_or_playlist == 2:
+    # with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executer:
+    #     executer.submit(download_playlist)
     download_playlist()
 else:
     print('invalid Selection.....!')
