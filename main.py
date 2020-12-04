@@ -3,6 +3,8 @@ import pytube
 import os
 # Used to Extract the Text Between the Double Quotes !
 import re
+#download time calculation
+import time
 import concurrent.futures.thread
 
 print('                                           **********Youtube Video Downloader*************')
@@ -43,9 +45,11 @@ def getITag(input_qality):
 
 
 def download_video(url, itag):
+    initial_time=time.time()
     video = pytube.YouTube(url)
     stream = video.streams.get_by_itag(itag)
     stream.download(FINAL_PATH)
+    print(f'{stream.default_filename} Download Complete in {time.time()-initial_time} seconds')
 
 
 def download_single_video():
@@ -74,8 +78,9 @@ def download_single_video():
         id_number = input('Enter The Id Number of The Video To Download The Video !')
         # out of the video streams the video selected by the user gets downloaded to the FINAL_PATH
         file_name = input('Save as :')
+        initial=time.time()
         y.streams.get_by_itag(dic_for_video.get(int(id_number))).download(FINAL_PATH, file_name)
-        print(f'File Saved to {FINAL_PATH} as {file_name}')
+        print(f'File Saved to {FINAL_PATH} as {file_name} Download Time :{time.time()-initial} seconds')
     # If Video/Audio Download Fails
     except Exception as e:
         print(f"Oops An Error Occured While Traversing the Link,Looks Like the Video URL is Corrupted !")
@@ -100,8 +105,6 @@ prompt_single_or_playlist = int(input('1)Single Video\n2)Playist'))
 if prompt_single_or_playlist == 1:
     download_single_video()
 elif prompt_single_or_playlist == 2:
-    with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executer:
-        executer.submit(download_playlist)
-
+    download_playlist()
 else:
     print('invalid Selection.....!')
