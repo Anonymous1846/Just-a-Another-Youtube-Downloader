@@ -95,9 +95,9 @@ def download_playlist():
     play_list_link = input('Paste Playlist URL: ')
     play_list = pytube.Playlist(play_list_link)
     print(f'Playlist Title: {play_list.title} and Number of Videos {len(play_list.video_urls)}:')
-    quality = int(input('Enter Quality\n1)Max\n2)High\n3)Medium\n4)Low'))
-    for video_url in play_list:
-        download_video(video_url, getITag(quality))
+    
+    # for video_url in play_list:
+    #     download_video(video_url, getITag(quality))
 
 
 # Ask The User Whether it is A Single Video or Playlist
