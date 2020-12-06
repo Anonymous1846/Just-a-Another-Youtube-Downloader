@@ -8,7 +8,7 @@ import re
 import time
 class Downloader():
     def __init__(self):
-        self.dic_for_video = None
+        self.dic_for_video = {}
 
     def download_single_video(self,Output_Path,video_link):
         try:
