@@ -2,6 +2,8 @@
 # The functions defined in this module will be called there !
 # Library for Downloading the Videos
 import pytube
+#Create a new Directory For Playlists !
+import os
 # For Regular Expressions
 import re
 # Time Module Imported to display the Download Time !
@@ -11,6 +13,7 @@ import threading
 
 class Downloader():
     def __init__(self):
+        #The Dictionary to Store the Youtube Stream's
         self.dic_for_video = {}
 
     def download_single_video(self, Output_Path, video_link):
@@ -49,10 +52,14 @@ class Downloader():
             print('Done....')
 
     def download_playlist(self, Output_Path, playlist_link):
+        FINAL_DIRECTORY = 'C:/Users/USER/Downloads/Youtube Videos'
         # Object of The Playlist Class
         initial = time.time()
         playlist = pytube.Playlist(playlist_link)
         print(f'Video Title: {playlist.title} Number of Videos: {len(playlist.video_urls)}')
+        if os.path.isdir(FINAL_DIRECTORY):
+            #If The Parent Directory of The Main Youtube Videos Exists then Create A Directory For Each Playlist By its Title !
+            os.path.join(FINAL_DIRECTORY, playlist.title)
         for video in playlist.video_urls:
             threading.Thread(target=self.download_playlist_video(Output_Path, video)).start()
         print(f'Playlist Download Complete in {time.time() - initial} seconds')
