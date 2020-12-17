@@ -1,5 +1,7 @@
-# The Python file has two functions namely for downloading the Single Video and For Downloading the Playlist
-# The functions defined in this module will be called there !
+#The Following Python file has a single class Downloader, which is has An __init__ method for initializing the
+#The List for Holding the Streams
+#download_single-video is for Downloading a Single video
+#Download_playlist_video is for downloading a Playlist, Iteratively !
 # Library for Downloading the Videos
 import pytube
 #Create a new Directory For Playlists !
@@ -25,7 +27,7 @@ class Downloader():
             # Counter needs to be assigned to the Video So that the User can choose the Video According to the Int Number !
             counter = 1
             format_value = input('1)video\n2)audio')
-            for i in y.streams.filter(type='video' if format_value == '1' else 'audio'):
+            for i in y.streams.filter(type='video' if format_value == '1' else 'audio',file_extension='mp4'):
                 # used to show the Type and Quality which are seperated by Spaces
                 list = str(i).split(" ")
                 itag, type, quality, fps_bitrate, audio_video = re.findall(r'"([^"]*)"',
@@ -50,22 +52,23 @@ class Downloader():
             print(f"Oops An Error Occured While Traversing the Link,Looks Like the Video URL is Corrupted !")
         finally:
             print('Done....')
-
+#playlist Download,iteratively !
     def download_playlist(self, Output_Path, playlist_link):
-        FINAL_DIRECTORY = 'C:/Users/USER/Downloads/Youtube Videos'
+
         # Object of The Playlist Class
         initial = time.time()
         playlist = pytube.Playlist(playlist_link)
         print(f'Video Title: {playlist.title} Number of Videos: {len(playlist.video_urls)}')
-        if os.path.isdir(FINAL_DIRECTORY):
-            #If The Parent Directory of The Main Youtube Videos Exists then Create A Directory For Each Playlist By its Title !
-            os.path.join(FINAL_DIRECTORY, playlist.title)
+         #If The Parent Directory of The Main Youtube Videos Exists then Create A Directory For Each Playlist By its Title !
+        playlist_output_path=os.path.join(Output_Path, playlist.title)
         for video in playlist.video_urls:
-            threading.Thread(target=self.download_playlist_video(Output_Path, video)).start()
+            threading.Thread(target=self.download_playlist_video(playlist_output_path, video)).start()
         print(f'Playlist Download Complete in {time.time() - initial} seconds')
 
     def download_playlist_video(self, Output_Path, video_url):
         initial = time.time()
         video = pytube.YouTube(video_url)
+        #The Video with Highest Resolution will be Dwnloaded !
         video.streams.filter(progressive=True).get_highest_resolution().download(Output_Path)
+        #Will Show The Time Taken for Individual Video Download !
         print(f'{video.title} Downloaded in {time.time() - initial} seconds')
