@@ -1,7 +1,6 @@
 from Downloader import Downloader
 import os
-# regular Expression for Checking whether it is Youtube Video/Playlist !
-import re
+
 
 import threading
 
