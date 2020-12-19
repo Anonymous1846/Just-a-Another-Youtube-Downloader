@@ -28,8 +28,8 @@ while option != 3:
         threading.Thread(target=download.download_single_video(FINAL_PATH, link)).start()
     # Option two for Playlist !
     elif option == 2:
-        playlist_link = input('Please Paste A Playlist Link : ')
-        download.download_playlist(FINAL_PATH, playlist_link)
+        playlist_link = input('Please Paste A Playlist Link :')
+        download.download_playlist(FINAL_PATH, playlist_link=playlist_link)
     elif option == 3:
         #The Program
         print('Exiting......')

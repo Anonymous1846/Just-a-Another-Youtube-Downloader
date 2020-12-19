@@ -5,6 +5,8 @@
 #For Single Video, download the All the Available Streams will be Shown and The
 #The File Extnsion will be of Mp4
 # Library for Downloading the Videos
+#There's an Issue with the Pytube Package, which has been resolved in the latest version as of now(10.1.0)
+#Please Upgrade from 10.0.0 to 10.1.0
 import pytube
 #Create a new Directory For Playlists !
 import os
@@ -21,6 +23,7 @@ class Downloader():
     def __init__(self):
         #The Dictionary to Store the Youtube Stream's
         self.dic_for_video = {}
+        print(f'Using Pytube Version :{pytube.__version__}')
 
     def download_single_video(self, Output_Path, video_link):
         try:
@@ -55,7 +58,7 @@ class Downloader():
             notification=ToastNotifier()
             #Show The Actual Message/Toast Message !
             notification.show_toast('YT Downloader v1.0',f'{y.title} Download Complete !\nDownload Time :{time.time() - initial} seconds',
-                                    duration=10,
+                                    duration=5,
                                     icon_path='C:\\Users\\USER\\Documents\\Workspace\\YTDownloader\\image_rescources\\yt.ico')
         # If Video/Audio Download Fails
         except Exception as e:
@@ -67,13 +70,19 @@ class Downloader():
 
         # Object of The Playlist Class
         initial = time.time()
-        playlist = pytube.Playlist(playlist_link)
+        playlist =pytube.Playlist(playlist_link)
         print(f'Video Title: {playlist.title} Number of Videos: {len(playlist.video_urls)}')
+        print(f'The Current Playlist Will be Saved in {playlist.title} Directory !')
          #If The Parent Directory of The Main Youtube Videos Exists then Create A Directory For Each Playlist By its Title !
         playlist_output_path=os.path.join(Output_Path, playlist.title)
-        for video in playlist.video_urls:
+        for video in playlist:
             threading.Thread(target=self.download_playlist_video(playlist_output_path, video)).start()
-        print(f'Playlist Download Complete in {time.time() - initial} seconds')
+        notification.show_toast('YT Downloader v1.0',
+                                f'{playlist.title} Download Complete !\nDownload Time :{time.time() - initial} seconds',
+                                duration=5,
+                                icon_path='C:\\Users\\USER\\Documents\\Workspace\\YTDownloader\\image_rescource\\yt.ico')
+
+
 
     def download_playlist_video(self, Output_Path, video_url):
         initial = time.time()
