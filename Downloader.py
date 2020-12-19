@@ -23,6 +23,7 @@ class Downloader():
     def __init__(self):
         #The Dictionary to Store the Youtube Stream's
         self.dic_for_video = {}
+
         print(f'Using Pytube Version :{pytube.__version__}')
 
     def download_single_video(self, Output_Path, video_link):
@@ -55,7 +56,7 @@ class Downloader():
             y.streams.get_by_itag(self.dic_for_video.get(int(id_number))).download(Output_Path)
             print(f'File Saved to {Output_Path} Download Time :{time.time() - initial} seconds')
             #We Will Create an Object of Toast Notifier Class
-            notification=ToastNotifier()
+
             #Show The Actual Message/Toast Message !
             notification.show_toast('YT Downloader v1.0',f'{y.title} Download Complete !\nDownload Time :{time.time() - initial} seconds',
                                     duration=5,
@@ -77,10 +78,12 @@ class Downloader():
         playlist_output_path=os.path.join(Output_Path, playlist.title)
         for video in playlist:
             threading.Thread(target=self.download_playlist_video(playlist_output_path, video)).start()
-        notification.show_toast('YT Downloader v1.0',
-                                f'{playlist.title} Download Complete !\nDownload Time :{time.time() - initial} seconds',
-                                duration=5,
-                                icon_path='C:\\Users\\USER\\Documents\\Workspace\\YTDownloader\\image_rescource\\yt.ico')
+        notification = ToastNotifier()
+        notification.show_toast(
+            'YT Downloader v1.0', f'{playlist.title} Download Complete !\nDownload Time :{time.time() - initial} seconds',
+            duration=5,
+            icon_path='C:\\Users\\USER\\Documents\\Workspace\\YTDownloader\\image_rescources\\yt.ico'
+        )
 
 
 
