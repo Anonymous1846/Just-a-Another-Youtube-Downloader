@@ -30,7 +30,7 @@ class Downloader():
             # Fetching the Video Using the Youtube Object From the link provided by the user !
             y = pytube.YouTube(video_link)
             # printing the author information and The Video Title !
-            print(f"The Video you Searched For is f{y.title} Author: {y.author}")
+            print(f"The Video you Searched For is {y.title} Author: {y.author}")
             # Counter needs to be assigned to the Video So that the User can choose the Video According to the Int Number !
             counter = 1
             format_value = input('1)video\n2)audio')
