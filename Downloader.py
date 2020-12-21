@@ -8,6 +8,7 @@
 #There's an Issue with the Pytube Package, which has been resolved in the latest version as of now(10.1.0)
 #Please Upgrade from 10.0.0 to 10.1.0
 import pytube
+import multiprocessing
 #Create a new Directory For Playlists !
 import os
 # For Regular Expressions
@@ -68,7 +69,7 @@ class Downloader():
             print('Done....')
 #playlist Download,iteratively !
     def download_playlist(self, Output_Path, playlist_link):
-
+        thread_pool_list=[]
         # Object of The Playlist Class
         initial = time.time()
         playlist =pytube.Playlist(playlist_link)
@@ -77,7 +78,14 @@ class Downloader():
          #If The Parent Directory of The Main Youtube Videos Exists then Create A Directory For Each Playlist By its Title !
         playlist_output_path=os.path.join(Output_Path, playlist.title)
         for video in playlist:
-            threading.Thread(target=self.download_playlist_video(playlist_output_path, video)).start()
+            thread_pool_list.append(threading.Thread(target=self.download_playlist_video(playlist_output_path, video)))
+    
+        for single_thread in thread_pool_list:
+            single_thread.start()
+        for single_thread in thread_pool_list:
+            single_thread.join()
+            #Initializing the Toast Message Object and The Notification will be displayed as soon as the
+            #The Download of all playlist videos are complete !
         notification = ToastNotifier()
         notification.show_toast(
             'YT Downloader v1.0', f'{playlist.title} Download Complete !\nDownload Time :{time.time() - initial} seconds',
