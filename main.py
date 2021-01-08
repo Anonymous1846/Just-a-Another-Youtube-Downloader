@@ -1,12 +1,14 @@
+#The Downloader File has the Downloader class, which hosts the methods for downloading the Single and Multiple Videos(Playlists)
 from Downloader import Downloader
+#For File handling fucntionality and checking and manipulating directories
 import os
-
-
 import threading
+#pyfiglet is used to add the ascii art
+import pyfiglet
 
-print(
-    '*******************************Youtube Video Downloader****************************\nVersion 1.0'
-)
+yt_downloader_title=pyfiglet.figlet_format('Youtube Downloader',font='slant')
+print(yt_downloader_title)
+
 # Name of Output Directory!
 Youtube_Video_Directory = 'Youtube Videos'
 # parent Directory !
