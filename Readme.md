@@ -10,6 +10,7 @@ Features include:
     <li>Mutliple Resolutions for Single Video(s)</li>
     <li>Check if the pytube library is installed, if not then it will install the module for us.</li>
     <li>Faster Playlist Downloads</li>
+    <li>Creates a dedicated folder for general downloads,and also for Playlist.</li>
 </ul>
 
 <b>Usage: Download the source code,after that go the Directory where main.py is located, and type python main.py</b>
