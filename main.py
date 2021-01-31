@@ -1,19 +1,6 @@
-#the Subprocess module runs processes in this case if the pytube module is not installed
-#then the subprocess will run the command pip install pytube
-#and finally the run the command python main.py file to invoke the Downloader!
-import subprocess
-try:
-    import pytube
-except:
-    print('Downloading Pytube.........!')
-    #cmd line command pip install pytube!
-    subprocess.run('pip install pytube')
-    print('Downloaded Pytube !')
-    subprocess.run('python main.py')
-    exit(0)
 #The Downloader File has the Downloader class, which hosts the methods for downloading the Single and Multiple Videos(Playlists)
 from Downloader import Downloader
-#For File handling fucntionality and checking and manipulating directories
+#For File handling functionality and checking and manipulating directories
 import os
 import threading
 
