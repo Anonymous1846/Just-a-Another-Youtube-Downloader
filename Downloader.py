@@ -1,14 +1,13 @@
-#The Following Python file has a single class Downloader, which is has An __init__ method for initializing the
-#The List for Holding the Streams
-#download_single-video is for Downloading a Single video
-#Download_playlist_video is for downloading a Playlist, Iteratively !
-#For Single Video, download the All the Available Streams will be Shown and The
-#The File Extnsion will be of Mp4
-# Library for Downloading the Videos
-#There's an Issue with the Pytube Package, which has been resolved in the latest version as of now(10.1.0)
-#the Subprocesses module is used to invoke other processes
+'''The Following Python file has a single class Downloader, which is has An __init__ method for initializing the
+The List for Holding the Streams
+download_single-video is for Downloading a Single video
+Download_playlist_video is for downloading a Playlist, Iteratively !
+For Single Video, download the All the Available Streams will be Shown and The
+The File Extnsion will be of Mp4
+Library for Downloading the Videos
+There's an Issue with the Pytube Package, which has been resolved in the latest version as of now(10.1.0)
 from concurrent.futures import ThreadPoolExecutor
-#Please Upgrade from 10.0.0 to 10.1.0
+Please Upgrade from 10.0.0 to 10.1.0'''
 import pytube
 import multiprocessing
 #Create a new Directory For Playlists !
@@ -26,8 +25,10 @@ class Downloader():
     def __init__(self):
         #The Dictionary to Store the Youtube Stream's
         self.dic_for_video = {}
-
+        #the ctr for notification Desktop !
+        
         print(f'Using Pytube Version :{pytube.__version__}')
+
 
     def download_single_video(self, Output_Path, video_link):
         try:
@@ -58,12 +59,13 @@ class Downloader():
             initial = time.time()
             y.streams.get_by_itag(self.dic_for_video.get(int(id_number))).download(Output_Path)
             print(f'File Saved to {Output_Path} Download Time :{time.time() - initial} seconds')
-            #We Will Create an Object of Toast Notifier Class
-
-            #Show The Actual Message/Toast Message !
-            notification.show_toast('YT Downloader v1.0',f'{y.title} Download Complete !\nDownload Time :{time.time() - initial} seconds',
-                                    duration=5,
-                                    icon_path='C:\\Users\\USER\\Documents\\Workspace\\YTDownloader\\image_rescources\\yt.ico')
+            notification=ToastNotifier()
+            notification.show_toast(
+                'YT Downloader v1.0',
+                f'Download Completed in {time.time()-initial} seconds !',
+                duration=5,
+                icon_path='C:\\Users\\USER\\Documents\\Workspace\\YTDownloader\\image_rescources\\yt.ico'
+            )
         # If Video/Audio Download Fails
         except Exception as e:
             print(f"Oops An Error Occured While Traversing the Link,Looks Like the Video URL is Corrupted !")
@@ -81,7 +83,7 @@ class Downloader():
         playlist_output_path=os.path.join(Output_Path, playlist.title)
         for video in playlist:
             self.download_playlist_video(playlist_output_path, video)
-        notification = ToastNotifier()
+        notification=ToastNotifier()
         notification.show_toast(
             'YT Downloader v1.0', f'{playlist.title} Download Complete !\nDownload Time :{time.time() - initial} seconds',
             duration=5,
