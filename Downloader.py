@@ -6,10 +6,9 @@ For Single Video, download the All the Available Streams will be Shown and The
 The File Extnsion will be of Mp4
 Library for Downloading the Videos
 There's an Issue with the Pytube Package, which has been resolved in the latest version as of now(10.1.0)
-from concurrent.futures import ThreadPoolExecutor
 Please Upgrade from 10.0.0 to 10.1.0'''
 import pytube
-import multiprocessing
+from concurrent.futures import ThreadPoolExecutor
 #Create a new Directory For Playlists !
 import os
 # For Regular Expressions
