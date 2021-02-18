@@ -24,7 +24,8 @@ if not os.path.isdir(FINAL_PATH):
     print('New Download Directory Created !')
 #Reference to The downloader Class
 download = Downloader()
-while True:
+option=''
+while option!=3:
     #The program will run till You Input The Number 3
     option = int(input('1)Video\n2)Playlist\n3)Exit\n>>'))
     #Option one for video
