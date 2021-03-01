@@ -13,5 +13,5 @@ Features include:
     <li>Creates a dedicated folder for general downloads,and also for individual Playlist.</li>
 </ul>
 
-<b>Usage: Download the source code,after that go the Directory where main.py is located, and type python main.py</b>
+<b>Usage: Download the source code,after that go the Directory where main.py is located, and type python main.py</b><br/>
 <b>Usage: Download the requirements using the command <em>pip install -r requirements.txt</em>.</b>
