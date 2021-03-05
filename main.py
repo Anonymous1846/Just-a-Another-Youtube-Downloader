@@ -2,7 +2,7 @@
 from Downloader import Downloader
 #For File handling functionality and checking and manipulating directories
 import os
-import threading
+
 
 #pyfiglet is used to add the ascii art
 import pyfiglet
@@ -31,7 +31,7 @@ while option!=3:
     #Option one for video
     if option == 1:
         link = input('Please Paste A Video Link : ')
-        threading.Thread(target=download.download_single_video(FINAL_PATH, link)).start()
+        download.download_single_video(FINAL_PATH, link)
     # Option two for Playlist !
     elif option == 2:
         playlist_link = input('Please Paste A Playlist Link :')

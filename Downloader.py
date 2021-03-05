@@ -93,6 +93,7 @@ class Downloader():
         executer=ThreadPoolExecutor(max_workers=12)
         #submitting the function to the executer submit method,(The function arguements are Output path and the Playlist Link!)
         executer.submit(self._download_playlist,Output_Path,playlist_link)
+        
 
 
     def download_playlist_video(self, Output_Path, video_url):

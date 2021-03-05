@@ -1,7 +1,5 @@
-FROM python:3-onbuild
+FROM python:3.8.8-buster
 
-RUN pip install --upgrade pip && \
-    pip install pytube && \
-    pip install pyfiglet
+RUN pip install -r requirements.txt
 
 CMD ["python","./main.py"]
