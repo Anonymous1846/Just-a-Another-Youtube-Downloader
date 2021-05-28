@@ -96,7 +96,7 @@ class Downloader():
         playlist =pytube.Playlist(playlist_link)
         PLAYLIST_DIR = r'{}'.format(playlist.title)
         print(f'Playlist Title: {playlist.title} Number of Videos: {len(playlist.video_urls)}')
-        os.mkdir(playlist.title)
+        os.mkdir(PLAYLIST_DIR)
         print(f'The Current Playlist Will be Saved in {PLAYLIST_DIR} Directory !')
         PLAYLIST_VIDS_DIR=os.path.join(VID_DIR,PLAYLIST_DIR)
 
