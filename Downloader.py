@@ -94,12 +94,14 @@ class Downloader():
 
         thread_pool_list=[]
         playlist =pytube.Playlist(playlist_link)
+        PLAYLIST_DIR = r'{}'.format(playlist.title)
         print(f'Playlist Title: {playlist.title} Number of Videos: {len(playlist.video_urls)}')
-        print(f'The Current Playlist Will be Saved in {playlist.title} Directory !')
-        playlist_output_path=os.path.join(VID_DIR, playlist.title)
+        os.mkdir(playlist.title)
+        print(f'The Current Playlist Will be Saved in {PLAYLIST_DIR} Directory !')
+        PLAYLIST_VIDS_DIR=os.path.join(VID_DIR,PLAYLIST_DIR)
 
         for video in playlist:
-            thread  = threading.Thread(target=self.download_single_playlist_video,args=(playlist_output_path, video))
+            thread  = threading.Thread(target=self.download_single_playlist_video,args=(PLAYLIST_VIDS_DIR, video))
             thread_pool_list.append(thread)
             thread.start()
         
