@@ -1,77 +1,74 @@
-'''The Following Python file has a single class Downloader, which is has An __init__ method for initializing the
-The List for Holding the Streams
-download_single-video is for Downloading a Single video
-Download_playlist_video is for downloading a Playlist, Iteratively !
-For Single Video, download the All the Available Streams will be Shown and The
-The File Extnsion will be of Mp4
-Library for Downloading the Videos
-There's an Issue with the Pytube Package, which has been resolved in the latest version as of now(10.1.0)
-Please Upgrade from 10.0.0 to 10.1.0'''
-import pytube
+
 from concurrent.futures import ThreadPoolExecutor
-#Create a new Directory For Playlists !
-import os
-# For Regular Expressions
-import re
-# Time Module Imported to display the Download Time !
-import time
-#For Creating a new Thread for the Download Playlist !
-import threading
-#For Showing the Notification for The Download Complete !
 from win10toast import ToastNotifier
+import threading
+import pytube
+import os
+import re
+import time
+
+def timer(func):
+    
+    def wrapper(*args,**kwargs):
+        start = time.time()
+        return_val = func(*args,**kwargs)
+        print(f'Download Completed In {round(time.time() - start)} seconds !')
+        return return_val
+    return wrapper
 
 class Downloader():
+
+    '''
+    The Downloader class contains the methods for downloading both single and playlist videos
+    The user has the option to choose from only audio/video/full hd etc when it comes to 
+    downloading single videos, and in the case of playlists, the download is defaulted to 
+    max resolution !
+    '''
+
     def __init__(self):
-        #The Dictionary to Store the Youtube Stream's
         self.dic_for_video = {}
-        #the ctr for notification Desktop !
-        
-        print(f'Using Pytube Version :{pytube.__version__}')
+        print(f'Powered By : Pytube {pytube.__version__}\n')
 
 
-    def download_single_video(self, Output_Path, video_link):
+    def download_single_video(self, VID_DIR:str, video_link:str):
+
         try:
-            # Fetching the Video Using the Youtube Object From the link provided by the user !
-            y = pytube.YouTube(video_link)
-            # printing the author information and The Video Title !
+
+            y = pytube.YouTube(video_link)          
             print(f"The Video you Searched For is {y.title} Author: {y.author}")
-            # Counter needs to be assigned to the Video So that the User can choose the Video According to the Int Number !
             counter = 1
             format_value = input('1)video\n2)audio')
             for i in y.streams.filter(type='video' if format_value == '1' else 'audio',file_extension='mp4'):
-                # used to show the Type and Quality which are seperated by Spaces
+                
                 list = str(i).split(" ")
                 itag, type, quality, fps_bitrate, audio_video = re.findall(r'"([^"]*)"',
                                                                            str(list[1]) + str(list[2]) + str(
                                                                                list[3]) + str(
                                                                                list[4]) + str(list[6]))
-                # The Integer is mapped to an unique iTag so that user can choose easily
+                
                 self.dic_for_video[counter] = itag
-                print(
-                    f"{counter}) Type:{type} \tQuality: {quality} \tFPS/BitRate: {fps_bitrate} \tHas Both Video/Audio: {audio_video}")
+                print(f"{counter}) Type:{type} \tQuality: {quality} \tFPS/BitRate: {fps_bitrate} \tHas Both Video/Audio: {audio_video}")
 
-                # Incrementing the counter so that Shows A Sequence order !
-                counter = counter + 1
+                counter += 1
             id_number = input('Enter The Id Number of The Video To Download The Video !')
-            # out of the video streams the video selected by the user gets downloaded to the FINAL_PATH
-
-            initial = time.time()
-            y.streams.get_by_itag(self.dic_for_video.get(int(id_number))).download(Output_Path)
-            print(f'File Saved to {Output_Path} Download Time :{time.time() - initial} seconds')
+            start = time.time()
+            y.streams.get_by_itag(self.dic_for_video.get(int(id_number))).download(VID_DIR)
+            print(f'Video download complete in {round(time.time() - start,3)} secs !')
             notification=ToastNotifier()
             notification.show_toast(
                 'YT Downloader v1.0',
-                f'Download Completed in {time.time()-initial} seconds !',
+                f'Download complete and the video is saved to {VID_DIR}',
                 duration=5,
-                icon_path='C:\\Users\\USER\\Documents\\Workspace\\YTDownloader\\image_rescources\\yt.ico'
+                icon_path='image_rescources\yt.ico'
             )
-        # If Video/Audio Download Fails
+
         except Exception as e:
-            print(f"Oops An Error Occured While Traversing the Link,Looks Like the Video URL is Corrupted !")
+            print(e)
+
         finally:
             print('Done....')
-#playlist Download,iteratively !
-    def _download_playlist(self, Output_Path, playlist_link):
+
+    def _download_playlist(self, VID_DIR, playlist_link):
         thread_pool_list=[]
         # Object of The Playlist Class
         initial = time.time()
@@ -79,7 +76,7 @@ class Downloader():
         print(f'Video Title: {playlist.title} Number of Videos: {len(playlist.video_urls)}')
         print(f'The Current Playlist Will be Saved in {playlist.title} Directory !')
          #If The Parent Directory of The Main Youtube Videos Exists then Create A Directory For Each Playlist By its Title !
-        playlist_output_path=os.path.join(Output_Path, playlist.title)
+        playlist_output_path=os.path.join(VID_DIR, playlist.title)
         for video in playlist:
             self.download_playlist_video(playlist_output_path, video)
         notification=ToastNotifier()
@@ -89,17 +86,14 @@ class Downloader():
             icon_path='C:\\Users\\USER\\Documents\\Workspace\\YTDownloader\\image_rescources\\yt.ico'
         )
 
-    def download_playlist(self, Output_Path, playlist_link):
+    def download_playlist(self, VID_DIR, playlist_link):
         executer=ThreadPoolExecutor(max_workers=12)
         #submitting the function to the executer submit method,(The function arguements are Output path and the Playlist Link!)
-        executer.submit(self._download_playlist,Output_Path,playlist_link)
+        executer.submit(self._download_playlist,VID_DIR,playlist_link)
         
 
 
-    def download_playlist_video(self, Output_Path, video_url):
-        initial = time.time()
+    def download_playlist_video(self, VID_DIR, video_url):
         video = pytube.YouTube(video_url)
-        #The Video with Highest Resolution will be Dwnloaded !
-        video.streams.filter(progressive=True).get_highest_resolution().download(Output_Path)
-        #Will Show The Time Taken for Individual Video Download !
-        print(f'{video.title} Downloaded in {time.time() - initial} seconds')
+        video.streams.filter(progressive=True).get_highest_resolution().download(VID_DIR)
+        
