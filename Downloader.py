@@ -1,11 +1,18 @@
-
-from concurrent.futures import ThreadPoolExecutor
 from win10toast import ToastNotifier
 import threading
 import pytube
 import os
 import re
 import time
+
+thread_lock = threading.Lock() # thread lock initiated so that the other threads cannot access it !
+
+'''
+The timer function is actually a decorator for
+the playlist downloader function to calculate 
+the time taken for individual video download 
+and overall playlist download
+'''
 
 def timer(func):
     
@@ -29,6 +36,19 @@ class Downloader():
         self.dic_for_video = {}
         print(f'Powered By : Pytube {pytube.__version__}\n')
 
+    '''
+    The below function is used for downloading a single video from youtube,
+    the checks are made for empty links and then the video is saved as the 
+    same name as the title itself in the Youtube Videos Download folder.
+
+    Downloads
+    |
+    |
+    -- Youtube Videos(Created by the script)
+            |
+            |
+             ----Currently Downloaded Video
+    '''
 
     def download_single_video(self, VID_DIR:str, video_link:str):
 
@@ -68,32 +88,36 @@ class Downloader():
         finally:
             print('Done....')
 
-    def _download_playlist(self, VID_DIR, playlist_link):
+
+    @timer
+    def download_playlist(self, VID_DIR:str, playlist_link:str):
+
         thread_pool_list=[]
-        # Object of The Playlist Class
-        initial = time.time()
         playlist =pytube.Playlist(playlist_link)
-        print(f'Video Title: {playlist.title} Number of Videos: {len(playlist.video_urls)}')
+        print(f'Playlist Title: {playlist.title} Number of Videos: {len(playlist.video_urls)}')
         print(f'The Current Playlist Will be Saved in {playlist.title} Directory !')
-         #If The Parent Directory of The Main Youtube Videos Exists then Create A Directory For Each Playlist By its Title !
         playlist_output_path=os.path.join(VID_DIR, playlist.title)
+
         for video in playlist:
-            self.download_playlist_video(playlist_output_path, video)
+            thread  = threading.Thread(target=self.download_single_playlist_video,args=(playlist_output_path, video))
+            thread_pool_list.append(thread)
+            thread.start()
+        
+        for thread in thread_pool_list:
+            thread.join()
+
         notification=ToastNotifier()
         notification.show_toast(
-            'YT Downloader v1.0', f'{playlist.title} Download Complete !\nDownload Time :{time.time() - initial} seconds',
+            'YT Downloader v1.0', f'{playlist.title} Download Complete !\n',
             duration=5,
             icon_path='C:\\Users\\USER\\Documents\\Workspace\\YTDownloader\\image_rescources\\yt.ico'
         )
-
-    def download_playlist(self, VID_DIR, playlist_link):
-        executer=ThreadPoolExecutor(max_workers=12)
-        #submitting the function to the executer submit method,(The function arguements are Output path and the Playlist Link!)
-        executer.submit(self._download_playlist,VID_DIR,playlist_link)
         
 
-
-    def download_playlist_video(self, VID_DIR, video_url):
+    @timer
+    def download_single_playlist_video(self, VID_DIR, video_url):
+        thread_lock.acquire()   #thread lock acqured !
         video = pytube.YouTube(video_url)
         video.streams.filter(progressive=True).get_highest_resolution().download(VID_DIR)
+        thread_lock.release()   #thread lock released !
         
