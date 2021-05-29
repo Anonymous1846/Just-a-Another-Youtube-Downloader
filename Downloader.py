@@ -55,7 +55,7 @@ class Downloader():
             y = pytube.YouTube(video_link)          
             print(f"The Video you Searched For is {y.title} Author: {y.author}")
             counter = 1
-            format_value = input('1)video\n2)audio')
+            format_value = input('1)video\n2)audio\n>>')
             for i in y.streams.filter(type='video' if format_value == '1' else 'audio',file_extension='mp4'):
                 
                 list = str(i).split(" ")
@@ -68,7 +68,7 @@ class Downloader():
                 print(f"{counter}) Type:{type} \tQuality: {quality} \tFPS/BitRate: {fps_bitrate} \tHas Both Video/Audio: {audio_video}")
 
                 counter += 1
-            id_number = input('Enter The Id Number of The Video To Download The Video !')
+            id_number = input('Enter the ID mumber of The video to download the video >> ')
             start = time.time()
             y.streams.get_by_itag(self.dic_for_video.get(int(id_number))).download(VID_DIR)
             print(f'Video download complete in {round(time.time() - start,3)} secs !')
@@ -84,7 +84,7 @@ class Downloader():
             print(e)
 
         finally:
-            print('Done....')
+            print('Done....\n')
 
 
     @timer
