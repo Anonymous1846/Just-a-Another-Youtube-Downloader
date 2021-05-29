@@ -41,10 +41,10 @@ class Downloader():
     the checks are made for empty links and then the video is saved as the 
     same name as the title itself in the Youtube Videos Download folder.
 
-    Downloads
+    \Downloads
     |
     |
-    -- Youtube Videos(Created by the script)
+    -- \Youtube Videos(Created by the script)
             |
             |
              ----Currently Downloaded Video
@@ -94,11 +94,14 @@ class Downloader():
 
         thread_pool_list=[]
         playlist =pytube.Playlist(playlist_link)
-        PLAYLIST_DIR = r'{}'.format(playlist.title)
         print(f'Playlist Title: {playlist.title} Number of Videos: {len(playlist.video_urls)}')
-        os.mkdir(PLAYLIST_DIR)
-        print(f'The Current Playlist Will be Saved in {PLAYLIST_DIR} Directory !')
+        PLAYLIST_DIR = r'{}'.format(playlist.title)
         PLAYLIST_VIDS_DIR=os.path.join(VID_DIR,PLAYLIST_DIR)
+        if not os.path.isdir(PLAYLIST_VIDS_DIR):
+            os.mkdir(PLAYLIST_VIDS_DIR)
+            print(PLAYLIST_VIDS_DIR)
+        print(f'The Current Playlist Will be Saved in {PLAYLIST_VIDS_DIR} Directory !')
+        
 
         for video in playlist:
             thread  = threading.Thread(target=self.download_single_playlist_video,args=(PLAYLIST_VIDS_DIR, video))
