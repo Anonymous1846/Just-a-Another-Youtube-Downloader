@@ -1,9 +1,10 @@
 from win10toast import ToastNotifier
 import threading
 import pytube
+import time
 import os
 import re
-import time
+
 
 thread_lock = threading.Lock() # thread lock initiated so that the other threads cannot access it !
 
@@ -24,10 +25,10 @@ def timer(func):
 class Downloader():
 
     '''
-    The Downloader class contains the methods for downloading both single and playlist videos
-    The user has the option to choose from only audio/video/full hd etc when it comes to 
-    downloading single videos, and in the case of playlists, the download is defaulted to 
-    max resolution !
+        The Downloader class contains the methods for downloading both single and playlist videos
+        The user has the option to choose from only audio/video/full hd etc when it comes to 
+        downloading single videos, and in the case of playlists, the download is defaulted to 
+        max resolution !
     '''
 
     def __init__(self):
@@ -35,17 +36,21 @@ class Downloader():
         print(f'Powered By : Pytube {pytube.__version__}\n')
 
     '''
-    The below function is used for downloading a single video from youtube,
-    the checks are made for empty links and then the video is saved as the 
-    same name as the title itself in the Youtube Videos Download folder.
+        The below function is used for downloading a single video from youtube,
+        the checks are made for empty links and then the video is saved as the 
+        same name as the title itself in the Youtube Videos Download folder.
 
-    \Downloads
-        |
-        |
-        \Youtube Videos(Created by the script)
+        \Downloads
             |
             |
-             ----Currently Downloaded Video
+            \Youtube Videos(Created by the script)
+                |
+                |
+                ----Currently Downloaded Video.pm4
+        
+        params: video_directory and the video link
+
+        return: None
     '''
 
     def download_single_video(self, VID_DIR:str, video_link:str):
@@ -59,17 +64,14 @@ class Downloader():
             for i in y.streams.filter(type='video' if format_value == '1' else 'audio',file_extension='mp4'):
                 
                 list = str(i).split(" ")
-                itag, type, quality, fps_bitrate, audio_video = re.findall(r'"([^"]*)"',
-                                                                           str(list[1]) + str(list[2]) + str(
-                                                                               list[3]) + str(
-                                                                               list[4]) + str(list[6]))
-                
+                itag, type, quality, fps_bitrate, audio_video = re.findall(r'"([^"]*)"',str(list[1]) + str(list[2]) + str(list[3]) + str(list[4]) + str(list[6]))
                 self.dic_for_video[counter] = itag
                 print(f"{counter}) Type:{type} \tQuality: {quality} \tFPS/BitRate: {fps_bitrate} \tHas Both Video/Audio: {audio_video}")
 
                 counter += 1
             id_number = input('Enter the ID mumber of The video to download the video >> ')
             start = time.time()
+            print('Starting download....')
             y.streams.get_by_itag(self.dic_for_video.get(int(id_number))).download(VID_DIR)
             print(f'Video download complete in {round(time.time() - start,3)} secs !')
             notification=ToastNotifier()
@@ -86,7 +88,21 @@ class Downloader():
         finally:
             print('Done....\n')
 
+    '''
+    The playlist downloader downloads all the playslist videos from the playlist,
+    into a folder which is created after the name of the playlist itself.
+    /Downloads
+        |
+        |
+        /Youtube Videos
+            |
+            |
+            /<Playlist Name>(created by the script)
+                |
+                Videos(corresponding playlist videos)
 
+    params: directory_path, and the playlist link
+    '''
     @timer
     def download_playlist(self, VID_DIR:str, playlist_link:str):
 
@@ -101,6 +117,7 @@ class Downloader():
             os.mkdir(PLAYLIST_VIDS_DIR)
             print(PLAYLIST_VIDS_DIR)
         print(f'The Current Playlist Will be Saved in {PLAYLIST_VIDS_DIR} Directory !')
+        print('Playlist download started')
         try:    
             for video in playlist:
                 thread  = threading.Thread(target=self.download_single_playlist_video,args=(PLAYLIST_VIDS_DIR, video))
@@ -116,13 +133,17 @@ class Downloader():
             notification.show_toast(
                 'YT Downloader v1.0', f'{playlist.title} Download Complete !\n',
                 duration=5,
-                icon_path='C:\\Users\\USER\\Documents\\Workspace\\YTDownloader\\image_rescources\\yt.ico'
+                icon_path='image_rescources\yt.ico'
             )
             print(PLAYLIST_DIR,end=' ')
         except Exception as e:
             print(e)
         
+    '''
+    The function downloads the max resolution video(with audio) from the playist.
 
+    params: Playlist dir and the playlist video link
+    '''
     @timer
     def download_single_playlist_video(self, VID_DIR, video_url):
         try:
