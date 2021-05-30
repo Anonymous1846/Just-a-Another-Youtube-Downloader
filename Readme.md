@@ -1,17 +1,35 @@
 # Just-a-Another-Youtube-Downloader
-As the name suggests, it is a simple python application, that allows us to download, single Youtube videos and playlist videos(Multiple Videos).
-Pytube module/library has been used to built the CLI application.
-The CLI Application can download The Audio/Video Files from the Video Link<br>
-The CLI can also Download Playlists from the Playlists Links.
-The only requirement is that Python must be installed on the Host Computer.(Python 3.5 and Greater Recommended)
+The YT Dwonloader is a simple python script used to download youtube videos/playlists. The <b><a href='https://github.com/pytube/pytube' target="_blank">Pytube</a></b> library is used to buld the aforementioned script. It can be used as a simple command line program. This script elimintes the hassles of visiting Youtube video downloader websites and advertisements.
+<ol>
+    <li><a href='#i'>Installation</a></li>
+    <li><a href='#w'>Working</a></li>
+    <li><a href='#f'>Features</a></li>   
+</ol>
+<h3 id='i'>Installation</h3>
+<p>
+First of all make sure that Python 3.5 or higher is installed. If not then download python from <a href='https://www.python.org/'>python.org</a>. After that go to the terminal and copy the following command: <br>
+      
+```
+    git clone https://github.com/Anonymous1846/Just-a-Another-Youtube-Downloader.git
+```
+</p>
+<p>This will create a copy of the repo in your local machine.To install the requirements for the application copy the following commands:</p>
+For Windows:<br>
+
+
+```
+    pip install -r requirements.txt
+```
+
+For Linux:<br>
+
+```
+    pip3 install -r requirements.txt
+```
+
+The YT Downloader is a simple python script used to download youtube videos and playlist videos.
 Features include:
-<ul>
-    <li>Select from Audio/Video</li>
-    <li>Mutliple Resolutions for Single Video(s)</li>
-    <li>Easy to use, minimal interface.</li>
-    <li>Faster Playlist Downloads</li>
-    <li>Creates a dedicated folder for general downloads,and also for individual Playlist.</li>
-</ul>
+
 
 <b>Usage: Download the source code,after that go the Directory where main.py is located, and type python main.py</b><br/>
 <b>Note: Download the requirements using the command <em>pip install -r requirements.txt</em>.</b>
