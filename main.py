@@ -1,4 +1,5 @@
 from Downloader import Downloader
+from platform import system 
 import pyfiglet
 import os
 
@@ -12,12 +13,19 @@ print(f'Version : {__version__}')
 print(f'Author  : {__author__}')
 
 YOUTUBE_VID_DIR = 'Youtube Videos' # Parent directory for all Yt videos !
-DOWNLOADS = 'C:/Users/USER/Downloads'
+current_user = os.getlogin()
+
+if system()=='Windows':
+    DOWNLOADS = f'C:/Users/{current_user}/Downloads' # get the currently logged in user's download dir !
+elif system()=='Linux':
+    DOWNLOADS = f'/home/{current_user}/Downloads'
+else:
+    raise Exception("Not Implemented For Current Platform !")
 FINAL_PATH = os.path.join(DOWNLOADS, YOUTUBE_VID_DIR) # joining the downloads and the new vids directory !
 
 if not os.path.isdir(FINAL_PATH):
     os.mkdir(FINAL_PATH)
-    print('New Download Directory Created !')
+    print(f'New Download Directory Created At {FINAL_PATH}')
 
 download = Downloader()
 
