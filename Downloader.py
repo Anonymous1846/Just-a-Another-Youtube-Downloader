@@ -1,4 +1,5 @@
-from win10toast import ToastNotifier
+# from win10toast import ToastNotifier
+from notifypy import Notify 
 import threading
 import pytube
 import time
@@ -21,6 +22,22 @@ def timer(func):
         print(f'Download Completed In {round(time.time() - start)} seconds !')
         return return_val
     return wrapper
+
+'''
+    A simple fucntion to send notification after downloading a video/playlist 
+
+    return: None
+
+    params: msg(str)
+'''
+def notify(msg:str):
+    notification = Notify()
+    notification.title = "YT Downloader v1.1"
+    notification.message = msg                  #custom msg for playlists and video !
+    notification.icon = 'media_resources\\yt.ico'
+    notification.audio = 'media_resources\\notification_sound.wav'
+    notification.send()
+
 
 class Downloader():
 
@@ -74,13 +91,7 @@ class Downloader():
             print('Starting download....')
             y.streams.get_by_itag(self.dic_for_video.get(int(id_number))).download(VID_DIR)
             print(f'Video download complete in {round(time.time() - start,3)} secs !')
-            notification=ToastNotifier()
-            notification.show_toast(
-                'YT Downloader v1.0',
-                f'Download complete and the video is saved to {VID_DIR}',
-                duration=5,
-                icon_path='image_rescources\yt.ico'
-            )
+            notify(f'Download complete and the video is saved to {VID_DIR}')
 
         except Exception as e:
             print(e)
@@ -129,13 +140,9 @@ class Downloader():
             for thread in thread_pool_list:
                 thread.join()
 
-            notification=ToastNotifier()
-            notification.show_toast(
-                'YT Downloader v1.0', f'{playlist.title} Download Complete !\n',
-                duration=5,
-                icon_path='image_rescources\yt.ico'
-            )
+            notify(f'{playlist.title} Download Complete !\n',)
             print(PLAYLIST_DIR,end=' ')
+
         except Exception as e:
             print(e)
         
@@ -154,4 +161,3 @@ class Downloader():
             thread_lock.release()   #thread lock released !
         except Exception as e:
             print(e)
-        
