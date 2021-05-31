@@ -33,8 +33,8 @@ def notify(msg:str):
     notification = Notify()
     notification.title = "YT Downloader v1.1"
     notification.message = msg                  #custom msg for playlists and video !
-    notification.icon = 'media_resources\\yt.ico'
-    notification.audio = 'media_resources\\notification_sound.wav'
+    notification.icon = './media_resources/yt.ico'
+    notification.audio = './media_resources/notification_sound.wav'
     notification.send()
 
 
