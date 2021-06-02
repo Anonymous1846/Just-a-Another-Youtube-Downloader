@@ -120,12 +120,12 @@ class Downloader():
         playlist =pytube.Playlist(playlist_link)
         print(f'Playlist Title: {playlist.title} Number of Videos: {len(playlist.video_urls)}')
         PLAYLIST_DIR = playlist.title                               #the playlist title will be the playlist videos folder
-        PLAYLIST_DIR = re.sub('\\ /', ' or ', PLAYLIST_DIR)         # remove the / or / and replace with or 
+        PLAYLIST_DIR = re.sub('\\ /', ' or ', PLAYLIST_DIR)         # remove the / or \ and replace with or 
         PLAYLIST_VIDS_DIR = os.path.join(VID_DIR,PLAYLIST_DIR)      # join path
         
         if not os.path.isdir(PLAYLIST_VIDS_DIR):                    # create a new folder if not exists
             os.mkdir(PLAYLIST_VIDS_DIR)
-            print(PLAYLIST_VIDS_DIR)
+            
         print(f'The Current Playlist Will be Saved in {PLAYLIST_VIDS_DIR} Directory !')
         print('Playlist download started')
         try:    

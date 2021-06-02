@@ -2,7 +2,7 @@
 Script/Appliation: YT Downloader
 
 Description      : The YT Downloader is a simple script/console application which allows us to download yt videos and playlists
-                   It is built on top of pytube library, and offers the users freeedom to download videos without hassle of 
+                   It is built on top of pytube library, and offers the users freedom to download videos without hassle of 
                    visiting YT video downloading websites and their ads
 
 Author           : Sharath Sunil

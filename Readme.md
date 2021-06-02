@@ -50,4 +50,4 @@ First of all make sure that Python 3.5 or higher is installed. If not then downl
     <li>Easy to use and simple design.</li>
     <li>Support for both Windows and Linux.</li>
 </ul>
-<b>Note: This script has bot been tested on a Mac, so chances are it may not work on mac machines!</b>
+<b>Note: This script has not been tested on a Mac OS, so chances are it may not work on Mac OS!</b>
